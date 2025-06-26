@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head">
+    <link rel="stylesheet" href="src/main/resources/static/css/css.css">
+    <title>Farmacia</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/webjars/font-awesome/css/all.css}" rel="stylesheet"/>
+    <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+
+<body th:fragment="body" class="d-flex flex-column" style="min-height: 100vh;">
+
+    <header th:fragment="header" style="background-color: #1E3A8A; color: white; padding: 20px 0; text-align: center;">
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #1E3A8A;">
+            <div class="container-fluid">
+                <a th:href="@{/}" class="navbar-brand">Tienda Farmacia</a>
+                <ul class="navbar-nav d-flex flex-row">
+                    <li class="nav-item px-2">
+                        <a class="nav-link" th:href="@{/farmacia/listado}">Medicamentos</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <h1 class="display-4 mb-4"><strong>Bienvenido a tu Farmacia de Confianza</strong></h1> 
+    </header>
+   
+    <main th:fragment="main" class="flex-grow-1 d-flex flex-column justify-content-center align-items-center text-center" 
+          style="background-color: dodgerblue; padding: 20px; color: white;">
+        <div class="container">
+            <p class="lead mb-4">Tu tienda especializada en medicamentos</p>
+          <iframe src="/video/medicamentos.mp4"class="rounded-4" style="width: 90%; height: 500px; border: none;"></iframe>
+        </div>
+    </main>
+    
+    <aside style="background-color: #2563EB; color: white; margin-top: 30px; padding: 20px; text-align: left; max-width: 80%; margin-left: auto; margin-right: auto; border-radius: 8px;">
+        <h3>Sobre Nuestra Farmacia</h3>
+        <p>
+            En nuestra tienda brindamos los mejores productos a nivel mundial dando lo mejor de lo mejor e tema de calidad ademas contamos con una interfaz intuitiva y facil de entender ayudando a que la experiencia sea mejor.
+        </p>
+    </aside>
+    
+    <footer th:fragment="footer" class="mt-auto p-3" style="background-color: #343a40; color: white;">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <p class="mb-0">&copy; 2025 Tienda de Farmacia - Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+</body>
+</html>

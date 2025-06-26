@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/plantilla :: head}">
+    <title>Farmacia - Medicamentos</title>
+</head>
+<body>
+    <header th:replace="~{layout/plantilla :: nav}"/>
+
+    
+    <section th:replace="~{farmacia/fragmentos :: botonesAgregar}"/>
+
+  
+    <section th:replace="~{farmacia/fragmentos :: agregarMedicamento}"/> 
+
+    <section th:replace="~{farmacia/fragmentos :: listadoMedicamentos}"/>
+    
+    <section th:replace="~{farmacia/fragmentos :: formularioQuejas}"/>
+
+    <footer th:replace="~{layout/plantilla :: footer}"/>      
+</body>
+</html>

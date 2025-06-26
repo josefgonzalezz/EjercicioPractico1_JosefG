@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <title>Fragmentos Farmacia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/rutinas.js}"></script>
+</head>
+<body>
+
+<section th:fragment="botonesAgregar" class="py-4 mb-4 bg-white shadow-sm">
+    <div class="container d-flex justify-content-between">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarMedicamento">
+            Agregar medicamento
+        </button>
+
+        
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#formularioQuejas">
+            Formulario de Quejas y Sugerencias
+        </button>
+    </div>
+</section>
+
+
+<section th:fragment="agregarMedicamento">
+    <div id="agregarMedicamento" class="modal fade" tabindex="-1" aria-labelledby="agregarMedicamentoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Agregar Medicamento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form th:action="@{/farmacia/guardar}" th:object="${farmacia}" method="POST" class="was-validated p-3" enctype="multipart/form-data" novalidate>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombre" class="form-label">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required/>
+                                <div class="invalid-feedback">Por favor ingresa el nombre del medicamento.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="descripcion" class="form-label">Descripción</label>
+                                <input type="text" class="form-control" id="descripcion" th:field="*{descripcion}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="stock" class="form-label">Cantidad en stock</label>
+                                <input type="number" class="form-control" id="stock" th:field="*{stock}" required/>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="precio" class="form-label">Precio</label>
+                                <input type="number" step="0.01" class="form-control" id="precio" th:field="*{precio}" required/>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="imagenFile" class="form-label">Imagen del medicamento</label>
+                            <input class="form-control" type="file" name="imagenFile" onchange="readURL(this)" accept="image/*"/>
+                            <img id="blah" alt="Vista previa" class="mt-2 w-100 object-fit-contain" style="display: none; min-height: 180px;"/>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" type="submit">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<section th:fragment="listadoMedicamentos" id="medicamentos" class="py-4" style="min-height: 600px;">
+    <div class="container">
+        <h3 class="mb-4 text-primary">Listado de medicamentos</h3>
+        <div th:if="${medicamentos != null and !medicamentos.empty}">
+            <div class="row g-4">
+                <div class="col-md-4" th:each="med : ${medicamentos}">
+                    <div class="card h-100 border-primary">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-primary" th:text="${med.nombre}">Nombre</h5>
+                            <p class="card-text mb-1"><strong>Descripción:</strong> <span th:text="${med.descripcion}">Descripción</span></p>
+                            <p class="card-text mb-1"><strong>Stock:</strong> <span th:text="${med.stock}">0</span></p>
+                            <p class="card-text mb-3"><strong>Precio:</strong> $<span th:text="${#numbers.formatDecimal(med.precio, 1, 'COMMA', 2, 'POINT')}">0.00</span></p>
+                            <div class="mt-auto pt-3 d-flex justify-content-between">
+                                <a th:href="@{/farmacia/modifica/{id}(id=${med.id})}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-pencil-alt"></i> Editar
+                                </a>
+                                <a th:href="@{/farmacia/eliminar/{id}(id=${med.id})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Seguro que quieres eliminar este medicamento?');">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-muted fs-5" th:if="${medicamentos == null or medicamentos.empty}">
+            No hay medicamentos registrados.
+        </div>
+    </div>
+</section>
+
+
+<section th:fragment="editarMedicamento">
+    <div class="container">
+        <h3 class="mb-4 text-primary">Editar Medicamento</h3>
+        <form th:action="@{/farmacia/guardar}" th:object="${farmacia}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+            <input type="hidden" th:field="*{id}" />
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" th:field="*{nombre}" required/>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <input type="text" class="form-control" id="descripcion" th:field="*{descripcion}"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="stock" class="form-label">Stock</label>
+                    <input type="number" class="form-control" id="stock" th:field="*{stock}" required/>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="precio" class="form-label">Precio</label>
+                    <input type="number" step="0.01" class="form-control" id="precio" th:field="*{precio}" required/>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="imagenFile" class="form-label">Imagen</label>
+                <input class="form-control" type="file" name="imagenFile" accept="image/*"/>
+            </div>
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        </form>
+    </div>
+</section>
+
+<section th:fragment="formularioQuejas">
+    <div id="formularioQuejas" class="modal fade" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary text-white">
+                    <h5 class="modal-title">Formulario de Quejas y Sugerencias</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form class="was-validated p-3" novalidate onsubmit="return false;">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="nombreQueja" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreQueja" name="nombre" required />
+                            <div class="invalid-feedback">Por favor ingresa tu nombre.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="correoQueja" class="form-label">Correo electrónico</label>
+                            <input type="email" class="form-control" id="correoQueja" name="correo" required />
+                            <div class="invalid-feedback">Por favor ingresa un correo válido.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="mensaje" class="form-label">Queja o sugerencia</label>
+                            <textarea class="form-control" id="mensaje" name="mensaje" rows="4" required></textarea>
+                            <div class="invalid-feedback">Este campo no puede quedar vacío.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="submit" data-bs-dismiss="modal">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
